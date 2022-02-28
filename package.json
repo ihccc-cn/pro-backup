@@ -1,0 +1,22 @@
+{
+  "name": "pro_change",
+  "version": "1.2.0",
+  "description": "replace project files.",
+  "keywords": [
+    "project",
+    "file"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "publish": "npm publish"
+  },
+  "bin": {
+    "pro_change": "./index.js"
+  },
+  "author": "liucdev <1058807007@qq.com> (https://github.com/liucdev)",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "inquirer": "^8.2.0"
+  }
+}

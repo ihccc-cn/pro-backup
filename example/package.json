@@ -1,0 +1,9 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "project-change": "pro_change"
+  },
+  "license": "MIT"
+}
