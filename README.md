@@ -1,4 +1,4 @@
-# pro_change
+# pro-backup
 
 切换项目不同文件的工具
 
@@ -7,12 +7,12 @@
 1. 安装
 
 ```bash
-npm install pro_change -save--dev
+npm install pro-backup -save--dev
 ```
 
 2. 使用
 
-在项目根目录下的 `/_pro_change` 目录下创建 `/index.json` 文件
+在项目根目录下的 `/_pro_backup` 目录下创建 `/index.json` 文件
 
 文件配置如下：
 
@@ -21,13 +21,13 @@ npm install pro_change -save--dev
   {
     "name": "wx-project",
     "change": [
-      { "from": "/_pro_change/wx/assets/logo.png", "to": "/src/assets/logo.png" },
+      { "from": "/_pro_backup/wx/assets/logo.png", "to": "/src/assets/logo.png" },
     ]
   },
   {
     "name": "aj-project",
     "change": [
-      { "from": "/_pro_change/aj/assets/logo.png", "to": "/src/assets/logo.png" },
+      { "from": "/_pro_backup/aj/assets/logo.png", "to": "/src/assets/logo.png" },
     ]
   },
 ]
@@ -36,7 +36,7 @@ npm install pro_change -save--dev
 3. 在命令行执行
 
 ```bash
-pro_change
+pro-backup
 ```
 
 > 配置中可以配置多个项目，同时一个 `change` 可以包含多个文件，替换的文件建议统一名称命名。

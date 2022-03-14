@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "project-change": "pro_change"
+    "backup": "pro-backup"
   },
   "license": "MIT"
 }

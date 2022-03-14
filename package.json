@@ -1,17 +1,18 @@
 {
-  "name": "pro_change",
-  "version": "1.2.0",
+  "name": "pro-backup",
+  "version": "1.2.1",
   "description": "replace project files.",
   "keywords": [
     "project",
     "file"
   ],
+  "files": ["example", "index.js"],
   "main": "index.js",
   "scripts": {
     "publish": "npm publish"
   },
   "bin": {
-    "pro_change": "./index.js"
+    "pro-backup": "./index.js"
   },
   "author": "liucdev <1058807007@qq.com> (https://github.com/liucdev)",
   "license": "MIT",

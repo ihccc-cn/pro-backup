@@ -5,7 +5,7 @@ const path = require("path");
 const inquirer = require("inquirer");
 
 async function readConfig() {
-  const prorc = path.join(process.cwd(), `./_pro_change/index.json`);
+  const prorc = path.join(process.cwd(), `./_pro_backup/index.json`);
   const data = await fsPromises.readFile(prorc);
   return JSON.parse(data.toString("utf-8"));
 }
