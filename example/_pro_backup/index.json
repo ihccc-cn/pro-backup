@@ -1,18 +1,18 @@
 [
   {
-    "name": "project-1",
-    "change": [
-      { "from": "/_pro_backup/wx/assets/logo.png", "to": "/src/assets/logo.png" },
-      { "from": "/_pro_backup/wx/pages/page1.js", "to": "/src/pages/page1.js" },
-      { "from": "/_pro_backup/wx/document.html", "to": "/src/document.html" }
+    "name": "pro-1",
+    "backup": [
+      { "from": "/_pro_backup/pro-1/assets/logo.png", "to": "/src/assets/logo.png" },
+      { "from": "/_pro_backup/pro-1/pages/page1.js", "to": "/src/pages/page1.js" },
+      { "from": "/_pro_backup/pro-1/document.html", "to": "/src/document.html" }
     ]
   },
   {
-    "name": "project-2",
-    "change": [
-      { "from": "/_pro_backup/nt/assets/logo.png", "to": "/src/assets/logo.png" },
-      { "from": "/_pro_backup/nt/pages/page1.js", "to": "/src/pages/page1.js" },
-      { "from": "/_pro_backup/nt/document.html", "to": "/src/document.html" }
+    "name": "pro-2",
+    "backup": [
+      { "from": "/_pro_backup/pro-2/assets/logo.png", "to": "/src/assets/logo.png" },
+      { "from": "/_pro_backup/pro-2/pages/page1.js", "to": "/src/pages/page1.js" },
+      { "from": "/_pro_backup/pro-2/document.html", "to": "/src/document.html" }
     ]
   }
 ]
