@@ -13,10 +13,7 @@ async function readConfig() {
 
 async function main() {
   const prorc = await readConfig();
-  const funcs = [
-    "↪ 还原（备份文件 -> 项目文件）",
-    "↩ 备份（项目文件 -> 备份文件）",
-  ];
+  const funcs = ["↪ 还原（备份文件 -> 项目文件）", "↩ 备份（项目文件 -> 备份文件）"];
 
   function backup(project, isBackup) {
     for (const item of prorc) {
@@ -24,6 +21,7 @@ async function main() {
         for (const cmap of item.backup) {
           let from = isBackup ? cmap.to : cmap.from;
           let to = isBackup ? cmap.from : cmap.to;
+          if (isBackup && !to) continue;
           const toPath = path.join(process.cwd(), to);
           // 如果存在覆盖文件，删除覆盖文件
           console.log("🔪 删除文件：[" + toPath + "]");
