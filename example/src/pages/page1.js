@@ -1,3 +1,3 @@
-const page = "pro page 2";
+const page = "default page 1";
 
 console.log(page);

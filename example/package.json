@@ -5,8 +5,8 @@
   "scripts": {
     "backup": "pro-backup"
   },
-  "devDependencies": {
-    "pro-backup": "^2.0.0"
-  },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "pro-backup": "^3.0.0"
+  }
 }
