@@ -1,22 +1,24 @@
 {
   "name": "pro-backup",
-  "version": "3.0.0",
-  "description": "replace project files.",
+  "version": "4.0.0",
+  "description": "switch project env.",
+  "type": "module",
   "keywords": [
     "project",
     "file"
   ],
   "files": [
+    "bin",
     "example",
-    "index.js",
+    "src",
     "package.json",
     "README.md"
   ],
   "main": "index.js",
   "bin": {
-    "pro-backup": "./index.js"
+    "pro-backup": "index.js"
   },
-  "author": "liucdev <1058807007@qq.com> (https://github.com/liucdev)",
+  "author": "ihccc <lccc10588@gmail.com> (https://github.com/ihccc-cn)",
   "license": "MIT",
   "private": false,
   "dependencies": {

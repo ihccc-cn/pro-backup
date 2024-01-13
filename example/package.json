@@ -1,12 +1,21 @@
 {
   "name": "project",
-  "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "backup": "pro-backup"
+    "dev": "vite",
+    "dev:old": "pro-backup old && vite",
+    "dev:new": "pro-backup new && vite",
+    "dev:new2": "pro-backup new2 && vite",
+    "build": "vite build",
+    "build:old": "pro-backup old && vite build",
+    "build:new": "pro-backup new && vite build",
+    "build:new2": "pro-backup new2 && vite build",
+    "preview": "vite preview"
   },
-  "license": "MIT",
-  "dependencies": {
-    "pro-backup": "^3.0.0"
+  "devDependencies": {
+    "pro-backup": "link:..",
+    "vite": "^5.0.8"
   }
 }

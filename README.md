@@ -12,13 +12,40 @@ npm install pro-backup -save--dev
 
 2. 使用
 
-```bash
-# 创建一个新备份项目，保存路径在 .pro-backup/pathname
-pro-backup pathname 项目名称
+- 添加命令脚本
+  ```json
+  "dev:old": "pro-backup --env=old && vite",
+  "dev:new": "pro-backup --env=new && vite",
+  "build:old": "pro-backup --env=old && vite build",
+  "build:new": "pro-backup --env=new && vite build",
+  ```
 
-# 添加新备份文件 file.js
-pro-backup /src/page/path/file.js
+* 文件 -> 文件或者文件夹
 
-# 还原或备份
-pro-backup
-```
+- 开发时怎么用：
+ 运行新命令，就可以识别到当前环境名称 new
+ 拷贝需要定制开发的文件，命名为老的环境名称 old
+ 在原有的文件内直接修改即可
+
+- 切换环境：
+ 执行 dev:old 命令，backup 判断当前环境和命令的环境名称不一致，将遍历所有文件，校验文件名
+ 有分支名称的文件，进行重命名操作：index.js -> index.new.js; index.old.js -> index.js;
+
+- 多个环境：
+ 如果环境较多，并且有些环境存在相同文件的情况，可以使用映射文件添加映射关系
+ 在对应路径下，添加 .backup.yaml 文件，格式如下：
+  ```yaml
+  {文件名}:
+   {当前环境名}:{映射环境名}
+  {文件名}:
+   {当前环境名}:{映射环境名}
+  ```
+ 如果此文件存在，backup 会先查找映射关系，将映射环境的文件重命名为需要使用的文件，切换时同理
+ 举例：在多个环境的情况下，新增一个需要定制文件，那拷贝的文件就需要重命名为一个公共环境名称，然后再添加映射文件，将其它环境映射到这个公共环境名称
+
+- 其它命令：
+ 使用 backup 命令，会提示需要使用的功能：
+  - 重命名环境：将一个环境的文件和映射内容都重命名为新的名称
+  - 删除环境：删除一个环境的文件和映射内容
+  - 拷贝环境：将一个环境拷贝到新的环境
+  - 提取源码：将一个环境的源代码文件提取到压缩包
