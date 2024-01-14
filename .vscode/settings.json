@@ -1,0 +1,9 @@
+{
+  "files.exclude": {
+    "**/.backup.yaml": true,
+    "**/*.hefei": true,
+    "**/*.hefei.*": true,
+    "**/*.hangzhou.*": true,
+    "**/*.shanghai.*": true
+  }
+}

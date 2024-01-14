@@ -1,31 +1,10 @@
 #!/usr/bin/env node
 
 // import path from "path";
-import { getInputEnv } from "./src/prompt.js";
-import { getCache, setCache } from "./src/cache.js";
+import { switchEnv } from "./src/switch-env.js";
 
 // 默认分割符
 // const SPLITER = ".";
-
-function scanEnvFiles() {}
-
-// 切环境
-async function switchTo(envName) {
-  let { env } = getCache();
-  if (!env) {
-    env = await getInputEnv();
-    if (env === envName) {
-      console.log("❌ 不能和当前环境名称一致！");
-      switchTo(envName);
-      return;
-    }
-  }
-  // 扫描到的环境文件暂时存储起来 { main: '', files: [],  };
-  const envFiles = [];
-
-  scanEnvFiles();
-  console.log(envName, env, process.cwd());
-}
 
 function main() {
   const args = process.argv.splice(2);
@@ -43,11 +22,7 @@ function main() {
     // pro-backup new
     // index.new 和 index 两个文件
     // new -> index，index -> index.env => index.old
-    switchTo(args[0]);
-  } else if (args.length > 1) {
-    // 拷贝一个文件到备份的环境中
-    // pro-backup copy E:\d\pro-backup\src\prompt.js old
-    // 拷贝文件prompt.js -> prompt.old.js
+    switchEnv(args[0]);
   }
 }
 
