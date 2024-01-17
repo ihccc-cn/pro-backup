@@ -20,7 +20,7 @@ body {
 #title {
   font-size: 32px;
   font-weight: bold;
-  color: blue;
+  color: purple;
 }
 
 @media (prefers-color-scheme: light) {

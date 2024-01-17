@@ -1,9 +1,15 @@
 {
   "files.exclude": {
-    "**/.backup.yaml": true,
-    "**/*.hefei": true,
-    "**/*.hefei.*": true,
-    "**/*.hangzhou.*": true,
-    "**/*.shanghai.*": true
+    "**/.backup.yaml": false,
+    "**/*.main": false,
+    "**/*.main.*": false,
+    "**/*.yaohui": false,
+    "**/*.yaohui.*": false,
+    "**/*.goofo": false,
+    "**/*.goofo.*": false,
+    "**/*.toui": false,
+    "**/*.toui.*": false,
+    "**/*.goofo2": false,
+    "**/*.goofo2.*": false,
   }
 }

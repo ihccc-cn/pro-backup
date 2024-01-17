@@ -1,51 +1,102 @@
+import fs from "fs";
 import path from "path";
 import { getInputEnv } from "./prompt.js";
-import { getCache } from "./cache.js";
+import { getCache, setCache } from "./cache.js";
 import {
   travel,
-  genEnvFile,
   readBackupYaml,
   parseYaml,
-  collectEnvFiles,
-  delEnv,
+  isMappingFile,
+  isEnvFile,
+  parseEnvFile,
 } from "./utils.js";
 
-function isMappingFile(filename) {
-  return filename === ".backup.yaml";
-}
-
-function scanEnvFiles(targetEnv) {
+function scanEnvFiles() {
   const scanPath = path.join(process.cwd());
-  console.log("scanPath::", scanPath);
+  // console.log("scanPath::", scanPath);
   const files = [];
 
-  let isEnvFile = genEnvFile(targetEnv);
+  const keyOf = (item) => path.join(item.dirname, item.name);
 
-  // 对每个文件进行遍历
-  // 如果文件名包含当前环境名称，说明此文件是需要处理的
-  // 如果文件名是 .backup.yaml，说明此文件是配置文件，需要读取配置内容
-  // 根据配置内容，获取包含当前环境名称的配置
   let count = 0;
-  travel(scanPath, (file) => {
-    console.log(file);
-    if (file.name === "node_modules") return false;
-    // console.log("file::", file);
-    if (isMappingFile(file.name)) {
-      // 读取配置内容
-      const data = readBackupYaml(file.pathname);
-      const res = parseYaml(data, targetEnv);
-      // 重新扫描当前路径，匹配文件名是 解析结果的文件
-      files.push(...collectEnvFiles(file.dirname, res));
-    } else if (isEnvFile(file.name)) {
-      files.push({
-        main: delEnv(file.pathname, targetEnv),
-        target: file.pathname,
-      });
-    }
+  travel(scanPath, (list) => {
+    const envFiles = {};
+    const mainFile = [];
+    const nextList = list.map((file) => {
+      // console.log(count++);
+      // console.log(file);
+      if (file.filename === "node_modules") return false;
+
+      if (isMappingFile(file)) {
+        // 读取配置内容
+        const data = readBackupYaml(file.pathname);
+        const mapping = parseYaml(data);
+        mapping.forEach((item) => {
+          const envInfos = { mapping: true, ...file, ...item };
+          const key = keyOf(envInfos);
+          if (!envFiles[key]) envFiles[key] = [];
+          envFiles[key].push(envInfos);
+        });
+      } else if (isEnvFile(file)) {
+        const fileInfo = parseEnvFile(file);
+        const envInfos = { mapping: false, ...file, ...fileInfo };
+        const key = keyOf(envInfos);
+        if (!envFiles[key]) envFiles[key] = [];
+        envFiles[key].push(envInfos);
+      } else {
+        mainFile.push(file);
+      }
+      return file;
+    });
+
+    mainFile.forEach((file) => {
+      const key = keyOf(file);
+      if (key in envFiles) {
+        files.push({ ...file, envFiles: envFiles[key] });
+      }
+    });
+
+    return nextList;
   });
 
-  isEnvFile = null;
   return files;
+}
+
+function collectSwitchFiles(fileList, targetEnv, env) {
+  const switchEnvList = [];
+
+  fileList.forEach((file) => {
+    const targetEnvFile = file.envFiles.find(
+      (item) => item.source === targetEnv || item.env === targetEnv
+    );
+    const backupEnvFile = file.envFiles.find((item) => item.source === env);
+    if (!targetEnvFile || targetEnvFile.target === env) return;
+    const res = { main: file.pathname };
+    if (file.isDirectory) {
+      res.target = path.join(
+        file.dirname,
+        targetEnvFile[targetEnvFile.mapping ? "targetName" : "filename"]
+      );
+      res.backup = path.join(
+        file.dirname,
+        backupEnvFile?.targetName || file.name + "." + env
+      );
+    } else {
+      res.target = path.join(
+        file.dirname,
+        targetEnvFile[targetEnvFile.mapping ? "targetName" : "filename"] +
+          (targetEnvFile.mapping ? file.ext : "")
+      );
+      res.backup = path.join(
+        file.dirname,
+        (backupEnvFile?.targetName || file.name + "." + env) + file.ext
+      );
+    }
+    if (res.target === res.backup) return;
+    switchEnvList.push(res);
+  });
+
+  return switchEnvList;
 }
 
 // 切环境
@@ -54,23 +105,45 @@ export async function switchEnv(targetEnv) {
   if (!env) {
     env = await getInputEnv();
     if (env === targetEnv) {
-      console.log("❌ 不能和当前环境名称一致！");
+      console.log("❌ 输入不能和当前环境名称一致！");
       switchEnv(targetEnv);
       return;
     }
   }
-  console.log(targetEnv, env);
+
+  if (env === targetEnv) {
+    console.log("🔊 Current environment:", env);
+    return;
+  }
   const startTime = Date.now();
 
+  console.log("🚧 Switch environment:", env, " >>>> ", targetEnv);
+
   // 扫描到的环境文件暂时存储起来 { main: '', targetFile: '',  };
-  const envFiles = scanEnvFiles(targetEnv);
+  const scanFiles = scanEnvFiles();
 
-  const fullInfos = envFiles.map((item) => ({ ...item, backup: "" }));
+  // console.log("scanFiles::", JSON.stringify(scanFiles, null, 2));
 
-  console.log("fullInfos::", fullInfos);
-  console.log(`${Date.now() - startTime}ms`);
+  const switchEnvList = collectSwitchFiles(scanFiles, targetEnv, env);
+
+  console.log("switchEnvList::", switchEnvList);
 
   // 扫描子环境的文件，依次提醒过滤
   // 将本次任务进行缓存到本地，如果命令被打断就可以重启
+
   // 执行对文件依次执行重命名操作
+  switchEnvList.forEach((file) => {
+    fs.renameSync(file.main, file.backup);
+    fs.renameSync(file.target, file.main);
+  });
+
+  if (switchEnvList.length === 0) {
+    console.log("💫 No change in environment:", targetEnv);
+  } else {
+    // 切换成功，将当前环境名称记录下来
+    setCache({ env: targetEnv });
+    console.log("🔊 Current environment:", targetEnv);
+  }
+
+  return { startTime };
 }
