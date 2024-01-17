@@ -16,7 +16,7 @@
   ],
   "main": "index.js",
   "bin": {
-    "pro-backup": "index.js"
+    "pb": "index.js"
   },
   "author": "ihccc <lccc10588@gmail.com> (https://github.com/ihccc-cn)",
   "license": "MIT",
