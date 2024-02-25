@@ -1,6 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { getInputEnv } from "./prompt.js";
+import {
+  getInputEnv,
+  optionsPrompt,
+  renamePrompt,
+  copyPrompt,
+  removePrompt,
+  extractPrompt,
+} from "./prompt.js";
 import { getCache, setCache } from "./cache.js";
 import {
   travel,
@@ -10,6 +17,12 @@ import {
   isEnvFile,
   parseEnvFile,
 } from "./utils.js";
+
+// 获取环境配置信息
+function getEnvConfig() {
+  const envConfig = path.join(process.cwd(), ".backup.yaml");
+  return readBackupYaml(envConfig);
+}
 
 function scanEnvFiles() {
   const scanPath = path.join(process.cwd());
@@ -30,7 +43,7 @@ function scanEnvFiles() {
       if (isMappingFile(file)) {
         // 读取配置内容
         const data = readBackupYaml(file.pathname);
-        const mapping = parseYaml(data);
+        const mapping = parseYaml(data.mapping);
         mapping.forEach((item) => {
           const envInfos = { mapping: true, ...file, ...item };
           const key = keyOf(envInfos);
@@ -101,30 +114,36 @@ function collectSwitchFiles(fileList, targetEnv, env) {
 
 // 切环境
 export async function switchEnv(targetEnv) {
-  let { env } = getCache();
-  if (!env) {
-    env = await getInputEnv();
-    if (env === targetEnv) {
-      console.log("❌ 输入不能和当前环境名称一致！");
-      switchEnv(targetEnv);
+  const config = getEnvConfig();
+  const cacheData = getCache();
+
+  const envList = config.env || [];
+  let currentEnv = cacheData.env; // 缓存内当前环境名称
+
+  if (!currentEnv) {
+    currentEnv = await getInputEnv(envList);
+
+    if (!currentEnv || currentEnv === targetEnv) {
+      setCache({ env: targetEnv });
+      console.log("🔊 Current environment:", targetEnv);
       return;
     }
   }
 
-  if (env === targetEnv) {
-    console.log("🔊 Current environment:", env);
+  if (currentEnv === targetEnv) {
+    console.log("🔊 Current environment:", currentEnv);
     return;
   }
   const startTime = Date.now();
 
-  console.log("🚧 Switch environment:", env, " >>>> ", targetEnv);
+  console.log("🚧 Switch environment:", currentEnv, " >>>> ", targetEnv);
 
   // 扫描到的环境文件暂时存储起来 { main: '', targetFile: '',  };
   const scanFiles = scanEnvFiles();
 
   // console.log("scanFiles::", JSON.stringify(scanFiles, null, 2));
 
-  const switchEnvList = collectSwitchFiles(scanFiles, targetEnv, env);
+  const switchEnvList = collectSwitchFiles(scanFiles, targetEnv, currentEnv);
 
   console.log("switchEnvList::", switchEnvList);
 
@@ -146,4 +165,29 @@ export async function switchEnv(targetEnv) {
   }
 
   return { startTime };
+}
+
+const options = ["重命名", "拷贝环境", "删除环境", "提取源码"];
+export async function selectOptions() {
+  const config = getEnvConfig();
+  const envList = config.env || [];
+
+  const checked = await optionsPrompt(options);
+
+  if (checked === options[0]) {
+    const res = await renamePrompt(envList);
+    console.log("重命名：", res);
+  }
+  if (checked === options[1]) {
+    const res = await copyPrompt(envList);
+    console.log("拷贝环境：", res);
+  }
+  if (checked === options[2]) {
+    const res = await removePrompt(envList);
+    console.log("删除环境：", res);
+  }
+  if (checked === options[3]) {
+    const res = await extractPrompt(envList);
+    console.log("提取源码：", res);
+  }
 }

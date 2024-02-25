@@ -39,7 +39,7 @@ export function travel(pathname, callback) {
 // 解析 yaml 内容
 export function readBackupYaml(pathname) {
   const file = fs.readFileSync(pathname, "utf8");
-  return yaml.parse(file);
+  return yaml.parse(file) || {};
 }
 
 // 解析 yaml 到 mapping

@@ -1,4 +1,5 @@
-index:
-  yaohui: main
-  tuio: main
-  goofo2: goofo
+mapping:
+  index:
+    yaohui: main
+    tuio: main
+    goofo2: goofo

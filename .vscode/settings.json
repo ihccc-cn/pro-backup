@@ -1,10 +1,10 @@
 {
   "files.exclude": {
-    "**/.backup.yaml": true,
-    "**/*.main*": true,
-    "**/*.yaohui*": true,
-    "**/*.goofo*": true,
-    "**/*.tuio*": true,
-    "**/*.goofo2*": true,
+    "**/.backup.yaml": false,
+    "**/*.main*": false,
+    "**/*.yaohui*": false,
+    "**/*.goofo*": false,
+    "**/*.tuio*": false,
+    "**/*.goofo2*": false,
   }
 }

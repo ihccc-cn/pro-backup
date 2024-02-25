@@ -1,3 +1,11 @@
-style:
-  yaohui: main
-  goofo2: goofo
+env:
+  - main
+  - yaohui
+  - goofo
+  - tuio
+  - goofo2
+
+mapping:
+  style:
+    yaohui: main
+    goofo2: goofo
