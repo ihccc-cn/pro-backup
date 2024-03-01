@@ -23,6 +23,12 @@ async function main() {
     const targetEnv = args[0];
     const res = await switchEnv(targetEnv);
     startTime = res?.startTime;
+  } else if (args.length === 2 && args[0] === "add") {
+    // 添加环境文件
+    console.log("添加环境文件");
+  } else if (args.length === 2 && args[0] === "del") {
+    // 删除环境文件
+    console.log("删除环境文件");
   }
   startTime && console.log(`⌛ 本次操作用时：${Date.now() - startTime}ms`);
 }

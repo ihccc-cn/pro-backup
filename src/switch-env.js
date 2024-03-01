@@ -177,17 +177,34 @@ export async function selectOptions() {
   if (checked === options[0]) {
     const res = await renamePrompt(envList);
     console.log("重命名：", res);
+
+    // 遍历环境文件
+    // 如果是选定的环境的文件，就执行重命名
+    // 修改映射文件配置 .backup.yaml
   }
   if (checked === options[1]) {
     const res = await copyPrompt(envList);
     console.log("拷贝环境：", res);
+
+    // 遍历环境文件
+    // 如果是选定的环境文件，执行复制操作，使用新环境命名
+    // 使用新环境命名
   }
   if (checked === options[2]) {
     const res = await removePrompt(envList);
     console.log("删除环境：", res);
+
+    // 校验通过
+    // 遍历环境文件
+    // 删除选定环境文件
+    // 删除映射配置
   }
   if (checked === options[3]) {
     const res = await extractPrompt(envList);
     console.log("提取源码：", res);
+
+    // 遍历环境文件
+    // 如果是选定环境文件，塞入压缩包
+    // 如果是映射配置，将映射文件塞入压缩包
   }
 }
